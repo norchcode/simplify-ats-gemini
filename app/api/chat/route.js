@@ -23,7 +23,20 @@ function buildSystemInstruction(context) {
 - If asked about ATS improvement, give concrete edits.
 - Prefer bullet points when giving recommendations.
 - If user asks in Indonesian, reply in Indonesian.
+- Do NOT use markdown bold markers like **text**.
+- Use plain text formatting. If listing items, use simple prefix '-' or '>'.
 ${atsContext}`;
+}
+
+function normalizeAssistantText(text = "") {
+  return String(text)
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/^•\s+/gm, "- ")
+    .replace(/^\*\s+/gm, "- ")
+    .replace(/^#{1,6}\s+/gm, "> ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 export async function POST(request) {
@@ -50,7 +63,8 @@ export async function POST(request) {
       }
     });
 
-    const reply = response?.text?.trim() || "Sorry, no response received.";
+    const rawReply = response?.text?.trim() || "Sorry, no response received.";
+    const reply = normalizeAssistantText(rawReply);
 
     return NextResponse.json({ result: reply });
   } catch (error) {
