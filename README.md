@@ -1,16 +1,15 @@
 # Final Project — CV/Resume ATS Scanner + Gemini Chatbot
 
-## Chosen Stack (Simple but Interesting)
+## Chosen Stack
 - **Next.js (App Router)**
 - **React (built into Next.js)**
 - **Gemini API via `@google/genai`**
 - **Custom CSS (no Tailwind required)**
 
-This stack was chosen because:
-1. **No Vanilla-only + No Express** (as requested).
-2. **Single full-stack project** (frontend + backend API routes in one codebase).
-3. **Simple deployment** and easy to explain for final project demo.
-4. Still looks modern and interactive.
+Why this stack:
+1. **Single full-stack project** (frontend + backend API routes in one codebase).
+2. **Simple deployment** and easy to present.
+3. Modern, responsive UI with minimal setup.
 
 ## Features
 - Upload resume (PDF/DOC/DOCX/TXT)
