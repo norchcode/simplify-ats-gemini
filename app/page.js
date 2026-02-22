@@ -8,7 +8,7 @@ const initialBotMessage = {
 };
 
 const quickPrompts = [
-  "Tolong cek 3 perbaikan terbesar dari CV aku.",
+  "Tolong identifikasi 3 peningkatan paling berdampak untuk CV aku.",
   "Bantu rewrite pengalaman kerja biar ATS friendly.",
   "Keyword apa yang paling kurang di CV aku?"
 ];
