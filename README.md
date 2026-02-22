@@ -12,7 +12,7 @@ Why this stack:
 3. Modern, responsive UI with minimal setup.
 
 ## Features
-- Upload resume (PDF/DOC/DOCX/TXT)
+- Upload resume (PDF/DOCX/TXT)
 - Optional job description input
 - ATS-style score + strengths + missing keywords + suggestions
 - Improved professional summary suggestion

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import mammoth from "mammoth";
 import { getGeminiClient, getGeminiModel, normalizeFileMime, safeJsonParse } from "@/lib/gemini";
 
 export const runtime = "nodejs";
@@ -32,6 +33,13 @@ Rules:
 - Return JSON only, without markdown.`;
 }
 
+function buildAtsPromptFromExtractedText(jobDescription = "", extractedResumeText = "") {
+  return `${buildAtsPrompt(jobDescription)}
+
+Resume text content (already extracted from uploaded file):
+${extractedResumeText}`;
+}
+
 export async function POST(request) {
   try {
     const formData = await request.formData();
@@ -45,30 +53,99 @@ export async function POST(request) {
     const mimeType = normalizeFileMime(resume);
     const fileBuffer = Buffer.from(await resume.arrayBuffer());
 
+    if (mimeType === "application/msword") {
+      return NextResponse.json(
+        {
+          error:
+            "Legacy .doc is not supported yet. Please upload .docx, .pdf, or .txt for ATS scan."
+        },
+        { status: 400 }
+      );
+    }
+
     const ai = getGeminiClient();
     const model = getGeminiModel();
 
-    const response = await ai.models.generateContent({
-      model,
-      contents: [
-        {
-          role: "user",
-          parts: [
-            { text: buildAtsPrompt(jobDescription) },
-            {
-              inlineData: {
-                mimeType,
-                data: fileBuffer.toString("base64")
-              }
-            }
-          ]
-        }
-      ],
-      config: {
-        temperature: 0.25,
-        responseMimeType: "application/json"
+    let response;
+
+    if (mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      const extracted = await mammoth.extractRawText({ buffer: fileBuffer });
+      const cleanedText = (extracted?.value || "").trim();
+
+      if (!cleanedText) {
+        return NextResponse.json({ error: "Could not extract text from DOCX file." }, { status: 400 });
       }
-    });
+
+      response = await ai.models.generateContent({
+        model,
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: buildAtsPromptFromExtractedText(
+                  jobDescription,
+                  cleanedText.slice(0, 25000)
+                )
+              }
+            ]
+          }
+        ],
+        config: {
+          temperature: 0.25,
+          responseMimeType: "application/json"
+        }
+      });
+    } else if (mimeType === "text/plain") {
+      const extractedText = fileBuffer.toString("utf-8").trim();
+      if (!extractedText) {
+        return NextResponse.json({ error: "TXT file is empty." }, { status: 400 });
+      }
+
+      response = await ai.models.generateContent({
+        model,
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: buildAtsPromptFromExtractedText(
+                  jobDescription,
+                  extractedText.slice(0, 25000)
+                )
+              }
+            ]
+          }
+        ],
+        config: {
+          temperature: 0.25,
+          responseMimeType: "application/json"
+        }
+      });
+    } else {
+      // PDF and other Gemini-supported MIME types use inlineData directly.
+      response = await ai.models.generateContent({
+        model,
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: buildAtsPrompt(jobDescription) },
+              {
+                inlineData: {
+                  mimeType,
+                  data: fileBuffer.toString("base64")
+                }
+              }
+            ]
+          }
+        ],
+        config: {
+          temperature: 0.25,
+          responseMimeType: "application/json"
+        }
+      });
+    }
 
     const parsed = safeJsonParse(response.text, {});
 

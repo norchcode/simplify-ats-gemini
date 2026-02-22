@@ -181,10 +181,10 @@ export default function HomePage() {
 
             <form onSubmit={handleScan} className="mt-4 space-y-3">
               <label className="block text-sm text-slate-200">
-                Upload CV / Resume (PDF, DOC, DOCX, TXT)
+                Upload CV / Resume (PDF, DOCX, TXT)
                 <input
                   type="file"
-                  accept=".pdf,.doc,.docx,.txt"
+                  accept=".pdf,.docx,.txt"
                   onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
                   className="mt-2 block w-full rounded-xl border border-slate-600/70 bg-slate-900/60 px-3 py-2 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-500 file:px-3 file:py-1.5 file:text-white file:hover:bg-indigo-600"
                 />
