@@ -9,8 +9,8 @@ const initialBotMessage = {
 
 const quickPrompts = [
   "Tolong identifikasi 3 peningkatan paling berdampak untuk CV aku.",
-  "Bantu rewrite pengalaman kerja biar ATS friendly.",
-  "Keyword apa yang paling kurang di CV aku?"
+  "Bantu tulis ulang pengalaman kerja agar lebih ATS-friendly.",
+  "Keyword penting apa yang masih kurang di CV aku?"
 ];
 
 export default function HomePage() {
@@ -176,7 +176,7 @@ export default function HomePage() {
           >
             <h2 className="text-lg font-semibold text-white">1) ATS Resume Scan</h2>
             <p className="mt-1 text-sm text-slate-300">
-              Upload CV kamu, lalu compare dengan job description biar ATS score lebih akurat.
+              Upload CV kamu, lalu bandingkan dengan job description biar ATS score lebih akurat.
             </p>
 
             <form onSubmit={handleScan} className="mt-4 space-y-3">
