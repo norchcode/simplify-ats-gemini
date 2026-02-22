@@ -124,13 +124,17 @@ export default function HomePage() {
   return (
     <main className="page">
       <header className="hero">
-        <div>
+        <div className="hero-main">
           <h1>Resume ATS Scanner + Gemini Career Chat</h1>
           <p>
             Final project stack: <strong>Next.js + Gemini API</strong>. No login, simple flow, mobile-first.
           </p>
+          <div className="hero-pills">
+            <span>⚡ Fast Scan</span>
+            <span>📱 Mobile Friendly</span>
+            <span>🤖 Gemini Powered</span>
+          </div>
         </div>
-        <span className="badge">Ready for Demo</span>
       </header>
 
       <div className="view-switch" role="tablist" aria-label="Main sections">
