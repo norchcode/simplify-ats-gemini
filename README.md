@@ -1,4 +1,4 @@
-# Final Project — CV/Resume ATS Scanner + Gemini Chatbot
+# CV/Resume ATS Scanner + Gemini Chatbot
 
 ## Chosen Stack
 - **Next.js (App Router)**
