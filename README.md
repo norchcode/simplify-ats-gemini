@@ -4,7 +4,7 @@
 - **Next.js (App Router)**
 - **React (built into Next.js)**
 - **Gemini API via `@google/genai`**
-- **Custom CSS (no Tailwind required)**
+- **Tailwind CSS**
 
 Why this stack:
 1. **Single full-stack project** (frontend + backend API routes in one codebase).
@@ -43,7 +43,3 @@ Why this stack:
    npm run dev
    ```
 4. Open `http://localhost:3000`
-
-## Notes
-- Keep `.env` private (do not upload to GitHub)
-- This project follows session materials: API endpoint + frontend chat integration + Gemini model usage
