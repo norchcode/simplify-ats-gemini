@@ -150,6 +150,8 @@ export default function HomePage() {
       <div className="relative mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
         <Hero />
 
+        <WorkflowStrip />
+
         <div className="mt-5 md:hidden">
           <Tabs>
             <TabsList>
@@ -163,7 +165,7 @@ export default function HomePage() {
           </Tabs>
         </div>
 
-        <section className="mt-5 grid gap-5 md:grid-cols-2">
+        <section className="mt-5 grid gap-5 md:grid-cols-[1.05fr_0.95fr]">
           <Card className={`fancy-card ${activeView !== "scan" ? "hidden md:block" : ""}`}>
             <CardHeader>
               <div className="flex items-center gap-2">
@@ -174,9 +176,16 @@ export default function HomePage() {
             </CardHeader>
 
             <CardContent>
-              <form onSubmit={handleScan} className="space-y-3">
-                <div className="rounded-xl border border-indigo-400/30 bg-indigo-500/10 p-3">
-                  <p className="text-sm font-medium text-indigo-100">Upload CV / Resume (PDF, DOCX, TXT)</p>
+              <form onSubmit={handleScan} className="space-y-4">
+                <div className="upload-surface rounded-xl p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-indigo-100">Upload CV / Resume (PDF, DOCX, TXT)</p>
+                      <p className="mt-1 text-xs text-slate-300">Keep it concise, role-focused, and keyword-rich.</p>
+                    </div>
+                    <div className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] text-indigo-100">ATS-ready mode</div>
+                  </div>
+
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -184,13 +193,20 @@ export default function HomePage() {
                     className="hidden"
                     onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
                   />
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <Button type="button" variant="secondary" onClick={() => fileInputRef.current?.click()}>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-3">
+                    <Button type="button" className="bg-white text-slate-900 hover:bg-slate-100" onClick={() => fileInputRef.current?.click()}>
                       Choose Resume File
                     </Button>
-                    <span className="text-xs text-slate-300">
-                      {resumeFile ? `Selected: ${resumeFile.name}` : "No file selected yet"}
-                    </span>
+                    <div className="min-w-[220px] rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs text-slate-200">
+                      {resumeFile ? (
+                        <>
+                          <span className="text-emerald-300">●</span> Selected: {resumeFile.name}
+                        </>
+                      ) : (
+                        "No file selected yet"
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -205,7 +221,7 @@ export default function HomePage() {
                   />
                 </label>
 
-                <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:brightness-110" type="submit" disabled={scanLoading}>
+                <Button className="h-11 w-full bg-gradient-to-r from-indigo-500 to-violet-500 text-[15px] font-semibold hover:brightness-110" type="submit" disabled={scanLoading}>
                   {scanLoading ? "Scanning..." : "Scan Resume"}
                 </Button>
 
@@ -246,7 +262,9 @@ export default function HomePage() {
                     </div>
                   ) : null}
                 </div>
-              ) : null}
+              ) : (
+                <EmptyAnalysisState />
+              )}
             </CardContent>
           </Card>
 
@@ -335,12 +353,43 @@ function Hero() {
   );
 }
 
+function WorkflowStrip() {
+  return (
+    <div className="mt-4 hidden rounded-xl border border-white/10 bg-white/5 p-3 md:flex md:items-center md:justify-between">
+      <WorkflowStep index="01" title="Upload Resume" desc="CV + optional job description" />
+      <WorkflowStep index="02" title="Analyze ATS" desc="Score, gaps, suggestions" />
+      <WorkflowStep index="03" title="Refine in Chat" desc="Rewrite with Gemini" />
+    </div>
+  );
+}
+
+function WorkflowStep({ index, title, desc }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="rounded-full border border-indigo-400/35 bg-indigo-500/15 px-2 py-1 text-[11px] font-semibold text-indigo-200">{index}</span>
+      <div>
+        <p className="text-xs font-semibold text-slate-100">{title}</p>
+        <p className="text-[11px] text-slate-400">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
 function BackgroundGlow() {
   return (
     <div className="pointer-events-none absolute inset-0">
       <div className="glow-slow absolute -top-28 -left-24 h-72 w-72 rounded-full bg-indigo-500/25 blur-3xl" />
       <div className="glow-slower absolute top-12 right-0 h-72 w-72 rounded-full bg-purple-500/20 blur-3xl" />
       <div className="glow-slow absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-cyan-500/15 blur-3xl" />
+    </div>
+  );
+}
+
+function EmptyAnalysisState() {
+  return (
+    <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-white/5 p-4 text-sm text-slate-300">
+      <p className="font-semibold text-slate-100">No ATS result yet.</p>
+      <p className="mt-1">Upload CV dan klik Scan Resume untuk mulai analisis.</p>
     </div>
   );
 }
