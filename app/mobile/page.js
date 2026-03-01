@@ -117,7 +117,7 @@ export default function MobilePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#090a0f] text-slate-100 pb-20">
+    <main className={`relative min-h-screen overflow-hidden bg-[#090a0f] text-slate-100 ${activeView === "chat" ? "pb-20" : "pb-4"}`}>
       <div className="relative mx-auto w-full max-w-xl px-4 py-4">
         <Card className="glass-dark border-orange-200/10">
           <CardHeader className="space-y-2">
@@ -224,18 +224,20 @@ export default function MobilePage() {
         )}
       </div>
 
-      <form onSubmit={handleSendChat} className="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-[#0a0d14]/95 px-3 py-2 backdrop-blur md:hidden">
-        <div className="mx-auto flex w-full max-w-xl items-center gap-2">
-          <Input
-            type="text"
-            placeholder="Tulis pertanyaan kamu..."
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            disabled={chatLoading}
-          />
-          <Button type="submit" className="btn-accent" disabled={chatLoading}>Send</Button>
-        </div>
-      </form>
+      {activeView === "chat" ? (
+        <form onSubmit={handleSendChat} className="fixed inset-x-0 bottom-0 z-20 border-t border-white/10 bg-[#0a0d14]/95 px-3 py-2 backdrop-blur md:hidden">
+          <div className="mx-auto flex w-full max-w-xl items-center gap-2">
+            <Input
+              type="text"
+              placeholder="Tulis pertanyaan kamu..."
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              disabled={chatLoading}
+            />
+            <Button type="submit" className="btn-accent" disabled={chatLoading}>Send</Button>
+          </div>
+        </form>
+      ) : null}
     </main>
   );
 }
