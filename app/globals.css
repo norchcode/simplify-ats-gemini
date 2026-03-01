@@ -12,20 +12,26 @@ body {
 }
 
 body {
-  @apply antialiased text-slate-100 bg-slate-950;
+  @apply antialiased text-slate-100 bg-[#090a0f];
 }
 
-.fancy-card {
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  background: linear-gradient(160deg, rgba(15, 23, 42, 0.82), rgba(30, 41, 59, 0.68));
+.glass-dark {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background: linear-gradient(160deg, rgba(12, 14, 21, 0.92), rgba(21, 25, 36, 0.78));
   box-shadow:
-    0 14px 30px rgba(2, 6, 23, 0.34),
+    0 14px 34px rgba(0, 0, 0, 0.42),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-.upload-surface {
-  border: 1px solid rgba(129, 140, 248, 0.35);
-  background: radial-gradient(circle at 20% 0%, rgba(99, 102, 241, 0.24), rgba(30, 41, 59, 0.45));
+.btn-accent {
+  color: #fff;
+  background: linear-gradient(92deg, #ff9a3c 0%, #ff7a45 52%, #ff9f5a 100%);
+  border: 1px solid rgba(255, 177, 112, 0.35);
+  box-shadow: 0 8px 22px rgba(255, 124, 69, 0.28);
+}
+
+.btn-accent:hover {
+  filter: brightness(1.06);
 }
 
 .chat-scroll::-webkit-scrollbar {
@@ -61,11 +67,11 @@ body {
 }
 
 .glow-slow {
-  animation: glowFloat 8s ease-in-out infinite;
+  animation: glowFloat 9s ease-in-out infinite;
 }
 
 .glow-slower {
-  animation: glowFloat 12s ease-in-out infinite reverse;
+  animation: glowFloat 13s ease-in-out infinite reverse;
 }
 
 @keyframes shimmer {
