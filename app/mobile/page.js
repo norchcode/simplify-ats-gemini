@@ -119,9 +119,9 @@ export default function MobilePage() {
   return (
     <main className={`relative min-h-screen overflow-hidden bg-[#090a0f] text-slate-100 ${activeView === "chat" ? "pb-20" : "pb-4"}`}>
       <div className="relative mx-auto w-full max-w-xl px-4 py-4">
-        <Card className="glass-dark border-orange-200/10">
+        <Card className="glass-dark border-violet-200/10">
           <CardHeader className="space-y-2">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-orange-200/80">AI Career Studio • Mobile</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200/80">AI Career Studio • Mobile</p>
             <CardTitle className="text-xl">Resume ATS Scanner + Gemini Career Chat</CardTitle>
             <CardDescription className="text-slate-300">Upload CV, cek ATS score, lalu ngobrol dengan AI buat dapetin perbaikan yang actionable.</CardDescription>
           </CardHeader>
@@ -140,7 +140,7 @@ export default function MobilePage() {
           <Card className="glass-dark mt-4">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Badge className="bg-orange-500/20 text-orange-100">Step 1</Badge>
+                <Badge className="bg-violet-500/20 text-violet-100">Step 1</Badge>
                 <CardTitle>ATS Resume Scan</CardTitle>
               </div>
               <CardDescription className="text-slate-300">Upload CV kamu, lalu bandingkan dengan job description biar ATS score lebih akurat.</CardDescription>
@@ -180,11 +180,11 @@ export default function MobilePage() {
                   <div className="rounded-xl border border-white/10 bg-black/20 p-3">
                     <div className="mb-2 flex items-center justify-between">
                       <p className="text-sm font-semibold">ATS Match Score</p>
-                      <p className="text-lg font-bold text-orange-300">{score}/100</p>
+                      <p className="text-lg font-bold text-violet-300">{score}/100</p>
                     </div>
                     <Progress value={score} />
                   </div>
-                  <div className="rounded-xl bg-orange-500/10 p-3 text-sm text-slate-100">{scanResult.summary}</div>
+                  <div className="rounded-xl bg-violet-500/10 p-3 text-sm text-slate-100">{scanResult.summary}</div>
                 </div>
               ) : null}
             </CardContent>
@@ -193,7 +193,7 @@ export default function MobilePage() {
           <Card className="glass-dark mt-4">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Badge className="bg-orange-500/20 text-orange-100">Step 2</Badge>
+                <Badge className="bg-violet-500/20 text-violet-100">Step 2</Badge>
                 <CardTitle>Gemini Career Chatbot</CardTitle>
               </div>
               <CardDescription className="text-slate-300">Lanjut ngobrol: minta rewrite bullet point, mock interview, atau strategi keyword ATS.</CardDescription>
@@ -201,7 +201,7 @@ export default function MobilePage() {
             <CardContent>
               <div className="mb-2 flex flex-wrap gap-2">
                 {quickPrompts.map((prompt) => (
-                  <Button key={prompt} type="button" variant="outline" size="sm" className="rounded-full border-orange-300/25 bg-orange-500/5" onClick={() => sendChatMessage(prompt)} disabled={chatLoading}>
+                  <Button key={prompt} type="button" variant="outline" size="sm" className="rounded-full border-violet-300/25 bg-violet-500/5" onClick={() => sendChatMessage(prompt)} disabled={chatLoading}>
                     {prompt}
                   </Button>
                 ))}
@@ -210,7 +210,7 @@ export default function MobilePage() {
               <div className="chat-scroll h-[52vh] overflow-y-auto rounded-xl border border-white/10 bg-black/25 p-3">
                 {messages.map((msg, i) => (
                   <div key={i} className={`mb-2 flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[88%] rounded-2xl px-3 py-2 text-sm ${msg.role === "user" ? "bg-orange-500/85 text-white" : "bg-slate-700/75 text-slate-100"}`}>
+                    <div className={`max-w-[88%] rounded-2xl px-3 py-2 text-sm ${msg.role === "user" ? "bg-violet-500/85 text-white" : "bg-slate-700/75 text-slate-100"}`}>
                       <p className="mb-1 text-[10px] uppercase tracking-wide opacity-75">{msg.role === "user" ? "You" : "Gemini"}</p>
                       <p className="whitespace-pre-wrap break-words">{msg.text}</p>
                     </div>

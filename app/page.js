@@ -127,13 +127,13 @@ export default function HomePage() {
       <BackgroundGlow />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
-        <Card className="glass-dark border-orange-200/10">
+        <Card className="glass-dark border-violet-200/10">
           <CardHeader>
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-orange-200/80">AI Career Studio</p>
+                <p className="text-xs uppercase tracking-[0.18em] text-violet-200/80">AI Career Studio</p>
                 <CardTitle className="mt-2 text-2xl sm:text-3xl">
-                  Resume ATS Scanner <span className="text-orange-300">+ Gemini Career Chat</span>
+                  Resume ATS Scanner <span className="text-violet-300">+ Gemini Career Chat</span>
                 </CardTitle>
                 <CardDescription className="mt-2 max-w-2xl text-sm sm:text-base text-slate-300">
                   Upload CV, cek ATS score, lalu ngobrol dengan AI buat dapetin perbaikan yang actionable.
@@ -141,9 +141,9 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-wrap gap-2 text-xs">
-                <Badge variant="outline" className="border-orange-300/25 bg-orange-500/10 text-orange-100">⚡ Fast</Badge>
-                <Badge variant="outline" className="border-orange-300/25 bg-orange-500/10 text-orange-100">🖥️ Desktop</Badge>
-                <Badge variant="outline" className="border-orange-300/25 bg-orange-500/10 text-orange-100">🤖 Gemini</Badge>
+                <Badge variant="outline" className="border-violet-300/25 bg-violet-500/10 text-violet-100">⚡ Fast</Badge>
+                <Badge variant="outline" className="border-violet-300/25 bg-violet-500/10 text-violet-100">🖥️ Desktop</Badge>
+                <Badge variant="outline" className="border-violet-300/25 bg-violet-500/10 text-violet-100">🤖 Gemini</Badge>
               </div>
             </div>
           </CardHeader>
@@ -153,7 +153,7 @@ export default function HomePage() {
           <Card className="glass-dark">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Badge className="bg-orange-500/20 text-orange-100">Step 1</Badge>
+                <Badge className="bg-violet-500/20 text-violet-100">Step 1</Badge>
                 <CardTitle>1) ATS Resume Scan</CardTitle>
               </div>
               <CardDescription className="text-slate-300">Upload CV kamu, lalu bandingkan dengan job description biar ATS score lebih akurat.</CardDescription>
@@ -161,8 +161,8 @@ export default function HomePage() {
 
             <CardContent>
               <form onSubmit={handleScan} className="space-y-4">
-                <div className="rounded-xl border border-orange-300/20 bg-orange-500/5 p-4">
-                  <p className="text-sm font-medium text-orange-100">Upload CV / Resume (PDF, DOCX, TXT)</p>
+                <div className="rounded-xl border border-violet-300/20 bg-violet-500/5 p-4">
+                  <p className="text-sm font-medium text-violet-100">Upload CV / Resume (PDF, DOCX, TXT)</p>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -211,20 +211,20 @@ export default function HomePage() {
                   <div className="rounded-xl border border-white/10 bg-black/20 p-4">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <p className="text-sm font-semibold text-white">ATS Match Score</p>
-                      <p className="text-xl font-bold text-orange-300">{score}/100</p>
+                      <p className="text-xl font-bold text-violet-300">{score}/100</p>
                     </div>
                     <Progress value={score} />
                   </div>
 
-                  <div className="rounded-xl bg-orange-500/10 p-3 text-sm leading-relaxed text-slate-100">{scanResult.summary}</div>
+                  <div className="rounded-xl bg-violet-500/10 p-3 text-sm leading-relaxed text-slate-100">{scanResult.summary}</div>
 
                   <List title="Strengths" items={scanResult.strengths} />
                   <List title="Missing Keywords" items={scanResult.missingKeywords} />
                   <List title="Suggestions" items={scanResult.suggestions} />
 
                   {scanResult.improvedSummary ? (
-                    <div className="rounded-xl border border-orange-300/20 bg-orange-500/5 p-3">
-                      <h4 className="text-sm font-semibold text-orange-200">Improved Professional Summary</h4>
+                    <div className="rounded-xl border border-violet-300/20 bg-violet-500/5 p-3">
+                      <h4 className="text-sm font-semibold text-violet-200">Improved Professional Summary</h4>
                       <p className="mt-1 text-sm leading-relaxed text-slate-100">{scanResult.improvedSummary}</p>
                     </div>
                   ) : null}
@@ -241,7 +241,7 @@ export default function HomePage() {
           <Card className="glass-dark">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <Badge className="bg-orange-500/20 text-orange-100">Step 2</Badge>
+                <Badge className="bg-violet-500/20 text-violet-100">Step 2</Badge>
                 <CardTitle>2) Gemini Career Chatbot</CardTitle>
               </div>
               <CardDescription className="text-slate-300">Lanjut ngobrol: minta rewrite bullet point, mock interview, atau strategi keyword ATS.</CardDescription>
@@ -255,7 +255,7 @@ export default function HomePage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="rounded-full border-orange-300/25 bg-orange-500/5 hover:bg-orange-500/10"
+                    className="rounded-full border-violet-300/25 bg-violet-500/5 hover:bg-violet-500/10"
                     onClick={() => sendChatMessage(prompt)}
                     disabled={chatLoading}
                   >
@@ -300,7 +300,7 @@ export default function HomePage() {
 function BackgroundGlow() {
   return (
     <div className="pointer-events-none absolute inset-0">
-      <div className="glow-slow absolute -top-28 -left-24 h-72 w-72 rounded-full bg-orange-500/15 blur-3xl" />
+      <div className="glow-slow absolute -top-28 -left-24 h-72 w-72 rounded-full bg-violet-500/15 blur-3xl" />
       <div className="glow-slower absolute top-12 right-0 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
       <div className="glow-slow absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
     </div>
@@ -311,7 +311,7 @@ function ChatBubble({ role, text }) {
   const isUser = role === "user";
   return (
     <div className={`mb-2 flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div className={`max-w-[88%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-md ${isUser ? "bg-orange-500/85 text-white" : "bg-slate-700/75 text-slate-100"}`}>
+      <div className={`max-w-[88%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-md ${isUser ? "bg-violet-500/85 text-white" : "bg-slate-700/75 text-slate-100"}`}>
         <p className="mb-1 text-[10px] uppercase tracking-wide opacity-75">{isUser ? "You" : "Gemini"}</p>
         <p className="whitespace-pre-wrap break-words">{text}</p>
       </div>
@@ -323,7 +323,7 @@ function List({ title, items = [] }) {
   if (!items?.length) return null;
   return (
     <div>
-      <h4 className="mb-1 text-sm font-semibold text-orange-200">{title}</h4>
+      <h4 className="mb-1 text-sm font-semibold text-violet-200">{title}</h4>
       <ul className="list-disc space-y-1 pl-5 text-sm text-slate-100">
         {items.map((item, index) => (
           <li key={index}>{item}</li>
