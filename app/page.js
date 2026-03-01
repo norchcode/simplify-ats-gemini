@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,11 +32,22 @@ export default function HomePage() {
   const [messages, setMessages] = useState([initialBotMessage]);
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
+  const chatBottomRef = useRef(null);
+
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, chatLoading]);
 
   const score = useMemo(() => {
     if (!scanResult?.score && scanResult?.score !== 0) return 0;
     return Math.max(0, Math.min(100, Number(scanResult.score) || 0));
   }, [scanResult]);
+
+  const scoreTone = useMemo(() => {
+    if (score >= 80) return "text-emerald-300";
+    if (score >= 60) return "text-amber-300";
+    return "text-rose-300";
+  }, [score]);
 
   async function handleScan(e) {
     e.preventDefault();
@@ -128,11 +139,11 @@ export default function HomePage() {
       <BackgroundGlow />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
-        <Card className="bg-white/5 backdrop-blur-xl">
+        <Card className="border-white/15 bg-white/5 backdrop-blur-xl">
           <CardHeader>
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                                <CardTitle className="mt-2 text-2xl sm:text-3xl">
+                <CardTitle className="mt-2 text-2xl sm:text-3xl">
                   Resume ATS Scanner <span className="text-indigo-300">+ Gemini Career Chat</span>
                 </CardTitle>
                 <CardDescription className="mt-2 max-w-2xl text-sm sm:text-base">
@@ -163,7 +174,7 @@ export default function HomePage() {
         </div>
 
         <section className="mt-4 grid gap-4 md:grid-cols-2">
-          <Card className={`${activeView !== "scan" ? "hidden md:block" : ""}`}>
+          <Card className={`transition-all duration-300 ${activeView !== "scan" ? "hidden md:block" : ""}`}>
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Badge>Step 1</Badge>
@@ -183,6 +194,12 @@ export default function HomePage() {
                   />
                 </label>
 
+                {resumeFile ? (
+                  <div className="rounded-lg border border-indigo-400/25 bg-indigo-500/10 px-3 py-2 text-xs text-indigo-100">
+                    File selected: <span className="font-semibold">{resumeFile.name}</span>
+                  </div>
+                ) : null}
+
                 <label className="block text-sm text-slate-200">
                   Job Description (opsional tapi disarankan)
                   <Textarea
@@ -201,14 +218,22 @@ export default function HomePage() {
                 {scanError ? <p className="text-sm text-rose-400">{scanError}</p> : null}
               </form>
 
+              {scanLoading ? <ScanSkeleton /> : null}
+
               {scanResult ? (
-                <div className="mt-5 space-y-4 border-t border-white/10 pt-4">
+                <div className="mt-5 space-y-4 border-t border-white/10 pt-4 animate-in fade-in duration-300">
                   <div className="rounded-xl border border-white/10 bg-slate-900/50 p-3">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <p className="text-sm font-semibold text-white">ATS Match Score</p>
-                      <span className="text-base font-bold text-indigo-300">{score}/100</span>
+                      <span className={`text-base font-bold ${scoreTone}`}>{score}/100</span>
                     </div>
                     <Progress value={score} />
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                    <InfoPill label="Strengths" value={scanResult.strengths?.length || 0} />
+                    <InfoPill label="Keywords" value={scanResult.missingKeywords?.length || 0} />
+                    <InfoPill label="Suggestions" value={scanResult.suggestions?.length || 0} />
                   </div>
 
                   <div className="rounded-xl bg-indigo-500/15 p-3 text-sm leading-relaxed text-slate-100">{scanResult.summary}</div>
@@ -228,7 +253,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className={`${activeView !== "chat" ? "hidden md:block" : ""}`}>
+          <Card className={`transition-all duration-300 ${activeView !== "chat" ? "hidden md:block" : ""}`}>
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Badge>Step 2</Badge>
@@ -263,6 +288,7 @@ export default function HomePage() {
                     Gemini is thinking...
                   </div>
                 ) : null}
+                <div ref={chatBottomRef} />
               </div>
 
               <form onSubmit={handleSendChat} className="mt-3 flex items-center gap-2 rounded-xl border border-slate-700/70 bg-slate-900/70 p-2">
@@ -288,9 +314,9 @@ export default function HomePage() {
 function BackgroundGlow() {
   return (
     <div className="pointer-events-none absolute inset-0">
-      <div className="absolute -top-28 -left-24 h-72 w-72 rounded-full bg-indigo-500/25 blur-3xl" />
-      <div className="absolute top-12 right-0 h-72 w-72 rounded-full bg-purple-500/20 blur-3xl" />
-      <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-cyan-500/15 blur-3xl" />
+      <div className="glow-slow absolute -top-28 -left-24 h-72 w-72 rounded-full bg-indigo-500/25 blur-3xl" />
+      <div className="glow-slower absolute top-12 right-0 h-72 w-72 rounded-full bg-purple-500/20 blur-3xl" />
+      <div className="glow-slow absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-cyan-500/15 blur-3xl" />
     </div>
   );
 }
@@ -299,7 +325,7 @@ function ChatBubble({ role, text }) {
   const isUser = role === "user";
   return (
     <div
-      className={`mb-2 max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-md ${
+      className={`mb-2 max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-md transition-all duration-200 ${
         isUser ? "ml-auto bg-indigo-500/85 text-white" : "mr-auto bg-slate-700/70 text-slate-100"
       }`}
     >
@@ -318,6 +344,25 @@ function List({ title, items = [] }) {
           <li key={index}>{item}</li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function InfoPill({ label, value }) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-white/5 px-2 py-2">
+      <p className="text-[10px] uppercase tracking-wide text-slate-400">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-slate-100">{value}</p>
+    </div>
+  );
+}
+
+function ScanSkeleton() {
+  return (
+    <div className="mt-5 space-y-3 border-t border-white/10 pt-4">
+      <div className="skeleton h-20 rounded-xl" />
+      <div className="skeleton h-24 rounded-xl" />
+      <div className="skeleton h-16 rounded-xl" />
     </div>
   );
 }
