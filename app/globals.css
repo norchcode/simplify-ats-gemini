@@ -25,9 +25,9 @@ body {
 
 .btn-accent {
   color: #fff;
-  background: linear-gradient(92deg, #ff9a3c 0%, #ff7a45 52%, #ff9f5a 100%);
-  border: 1px solid rgba(255, 177, 112, 0.35);
-  box-shadow: 0 8px 22px rgba(255, 124, 69, 0.28);
+  background: linear-gradient(96deg, #8b5cf6 0%, #7c3aed 52%, #a78bfa 100%);
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.28);
 }
 
 .btn-accent:hover {
