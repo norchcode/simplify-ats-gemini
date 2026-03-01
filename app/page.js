@@ -132,12 +132,11 @@ export default function HomePage() {
           <CardHeader>
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-indigo-300">AI Resume Studio</p>
-                <CardTitle className="mt-2 text-2xl sm:text-3xl">
+                                <CardTitle className="mt-2 text-2xl sm:text-3xl">
                   Resume ATS Scanner <span className="text-indigo-300">+ Gemini Career Chat</span>
                 </CardTitle>
                 <CardDescription className="mt-2 max-w-2xl text-sm sm:text-base">
-                  UI phase 2 dengan gaya komponen ala shadcn: lebih rapi, konsisten, dan mobile-friendly.
+                  Upload CV, cek ATS score, lalu ngobrol dengan AI buat dapetin perbaikan yang actionable.
                 </CardDescription>
               </div>
 
@@ -168,9 +167,9 @@ export default function HomePage() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Badge>Step 1</Badge>
-                <CardTitle>ATS Resume Scan</CardTitle>
+                <CardTitle>1) ATS Resume Scan</CardTitle>
               </div>
-              <CardDescription>Upload CV + optional JD untuk matching yang lebih akurat.</CardDescription>
+              <CardDescription>Upload CV kamu, lalu bandingkan dengan job description biar ATS score lebih akurat.</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleScan} className="space-y-3">
@@ -185,10 +184,10 @@ export default function HomePage() {
                 </label>
 
                 <label className="block text-sm text-slate-200">
-                  Job Description (opsional)
+                  Job Description (opsional tapi disarankan)
                   <Textarea
                     rows={6}
-                    placeholder="Paste job description di sini..."
+                    placeholder="Paste job description di sini untuk ATS matching yang lebih akurat..."
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
                     className="mt-2"
@@ -225,11 +224,7 @@ export default function HomePage() {
                     </div>
                   ) : null}
                 </div>
-              ) : (
-                <div className="mt-5 rounded-xl border border-dashed border-slate-600/70 bg-slate-900/30 p-4 text-sm text-slate-300">
-                  Belum ada hasil scan. Upload CV dulu, lalu klik <span className="font-semibold text-white">Scan Resume</span>.
-                </div>
-              )}
+              ) : null}
             </CardContent>
           </Card>
 
@@ -237,9 +232,9 @@ export default function HomePage() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Badge>Step 2</Badge>
-                <CardTitle>Gemini Career Chatbot</CardTitle>
+                <CardTitle>2) Gemini Career Chatbot</CardTitle>
               </div>
-              <CardDescription>Minta rewrite bullet point, simulasi interview, atau strategi keyword ATS.</CardDescription>
+              <CardDescription>Lanjut ngobrol: minta rewrite bullet point, mock interview, atau strategi keyword ATS.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
