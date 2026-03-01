@@ -32,7 +32,9 @@ export default function HomePage() {
   const [messages, setMessages] = useState([initialBotMessage]);
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
+
   const chatBottomRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     chatBottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -42,6 +44,12 @@ export default function HomePage() {
     if (!scanResult?.score && scanResult?.score !== 0) return 0;
     return Math.max(0, Math.min(100, Number(scanResult.score) || 0));
   }, [scanResult]);
+
+  const scoreLabel = useMemo(() => {
+    if (score >= 80) return "Strong Match";
+    if (score >= 60) return "Needs Optimization";
+    return "Low Match";
+  }, [score]);
 
   const scoreTone = useMemo(() => {
     if (score >= 80) return "text-emerald-300";
@@ -125,6 +133,7 @@ export default function HomePage() {
     e.preventDefault();
     const userText = chatInput.trim();
     if (!userText || chatLoading) return;
+
     setChatInput("");
     await sendChatMessage(userText);
   }
@@ -139,28 +148,9 @@ export default function HomePage() {
       <BackgroundGlow />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
-        <Card className="border-white/15 bg-white/5 backdrop-blur-xl">
-          <CardHeader>
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <CardTitle className="mt-2 text-2xl sm:text-3xl">
-                  Resume ATS Scanner <span className="text-indigo-300">+ Gemini Career Chat</span>
-                </CardTitle>
-                <CardDescription className="mt-2 max-w-2xl text-sm sm:text-base">
-                  Upload CV, cek ATS score, lalu ngobrol dengan AI buat dapetin perbaikan yang actionable.
-                </CardDescription>
-              </div>
+        <Hero />
 
-              <div className="flex flex-wrap gap-2 text-xs">
-                <Badge variant="outline">⚡ Fast</Badge>
-                <Badge variant="outline">📱 Mobile Friendly</Badge>
-                <Badge variant="outline">🤖 Gemini</Badge>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <div className="mt-4 md:hidden">
+        <div className="mt-5 md:hidden">
           <Tabs>
             <TabsList>
               <TabsTrigger type="button" active={activeView === "scan"} onClick={() => setActiveView("scan")}>
@@ -173,8 +163,8 @@ export default function HomePage() {
           </Tabs>
         </div>
 
-        <section className="mt-4 grid gap-4 md:grid-cols-2">
-          <Card className={`transition-all duration-300 ${activeView !== "scan" ? "hidden md:block" : ""}`}>
+        <section className="mt-5 grid gap-5 md:grid-cols-2">
+          <Card className={`fancy-card ${activeView !== "scan" ? "hidden md:block" : ""}`}>
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Badge>Step 1</Badge>
@@ -182,23 +172,27 @@ export default function HomePage() {
               </div>
               <CardDescription>Upload CV kamu, lalu bandingkan dengan job description biar ATS score lebih akurat.</CardDescription>
             </CardHeader>
+
             <CardContent>
               <form onSubmit={handleScan} className="space-y-3">
-                <label className="block text-sm text-slate-200">
-                  Upload CV / Resume (PDF, DOCX, TXT)
-                  <Input
+                <div className="rounded-xl border border-indigo-400/30 bg-indigo-500/10 p-3">
+                  <p className="text-sm font-medium text-indigo-100">Upload CV / Resume (PDF, DOCX, TXT)</p>
+                  <input
+                    ref={fileInputRef}
                     type="file"
                     accept=".pdf,.docx,.txt"
+                    className="hidden"
                     onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-                    className="mt-2 file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-500 file:px-3 file:py-1.5 file:text-white file:hover:bg-indigo-600"
                   />
-                </label>
-
-                {resumeFile ? (
-                  <div className="rounded-lg border border-indigo-400/25 bg-indigo-500/10 px-3 py-2 text-xs text-indigo-100">
-                    File selected: <span className="font-semibold">{resumeFile.name}</span>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Button type="button" variant="secondary" onClick={() => fileInputRef.current?.click()}>
+                      Choose Resume File
+                    </Button>
+                    <span className="text-xs text-slate-300">
+                      {resumeFile ? `Selected: ${resumeFile.name}` : "No file selected yet"}
+                    </span>
                   </div>
-                ) : null}
+                </div>
 
                 <label className="block text-sm text-slate-200">
                   Job Description (opsional tapi disarankan)
@@ -211,7 +205,7 @@ export default function HomePage() {
                   />
                 </label>
 
-                <Button className="w-full" type="submit" disabled={scanLoading}>
+                <Button className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:brightness-110" type="submit" disabled={scanLoading}>
                   {scanLoading ? "Scanning..." : "Scan Resume"}
                 </Button>
 
@@ -222,18 +216,21 @@ export default function HomePage() {
 
               {scanResult ? (
                 <div className="mt-5 space-y-4 border-t border-white/10 pt-4 animate-in fade-in duration-300">
-                  <div className="rounded-xl border border-white/10 bg-slate-900/50 p-3">
+                  <div className="rounded-xl border border-white/10 bg-slate-900/70 p-4">
                     <div className="mb-3 flex items-center justify-between gap-3">
                       <p className="text-sm font-semibold text-white">ATS Match Score</p>
-                      <span className={`text-base font-bold ${scoreTone}`}>{score}/100</span>
+                      <div className="text-right">
+                        <p className={`text-xl font-bold ${scoreTone}`}>{score}/100</p>
+                        <p className="text-[11px] text-slate-400">{scoreLabel}</p>
+                      </div>
                     </div>
                     <Progress value={score} />
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                    <InfoPill label="Strengths" value={scanResult.strengths?.length || 0} />
-                    <InfoPill label="Keywords" value={scanResult.missingKeywords?.length || 0} />
-                    <InfoPill label="Suggestions" value={scanResult.suggestions?.length || 0} />
+                    <InfoPill label="Strengths" value={scanResult.strengths?.length || 0} tone="from-emerald-500/20 to-transparent" />
+                    <InfoPill label="Keywords" value={scanResult.missingKeywords?.length || 0} tone="from-amber-500/20 to-transparent" />
+                    <InfoPill label="Suggestions" value={scanResult.suggestions?.length || 0} tone="from-indigo-500/20 to-transparent" />
                   </div>
 
                   <div className="rounded-xl bg-indigo-500/15 p-3 text-sm leading-relaxed text-slate-100">{scanResult.summary}</div>
@@ -253,7 +250,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <Card className={`transition-all duration-300 ${activeView !== "chat" ? "hidden md:block" : ""}`}>
+          <Card className={`fancy-card ${activeView !== "chat" ? "hidden md:block" : ""}`}>
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Badge>Step 2</Badge>
@@ -261,6 +258,7 @@ export default function HomePage() {
               </div>
               <CardDescription>Lanjut ngobrol: minta rewrite bullet point, mock interview, atau strategi keyword ATS.</CardDescription>
             </CardHeader>
+
             <CardContent>
               <div className="flex flex-wrap gap-2">
                 {quickPrompts.map((prompt) => (
@@ -269,7 +267,7 @@ export default function HomePage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="rounded-full"
+                    className="rounded-full border-indigo-400/30 bg-indigo-500/10 hover:bg-indigo-500/20"
                     onClick={() => handleQuickPrompt(prompt)}
                     disabled={chatLoading}
                   >
@@ -278,7 +276,7 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <div className="chat-scroll mt-3 h-[52vh] min-h-[360px] overflow-y-auto rounded-xl border border-slate-700/70 bg-slate-900/60 p-3">
+              <div className="chat-scroll mt-3 h-[52vh] min-h-[360px] overflow-y-auto rounded-xl border border-slate-700/70 bg-slate-900/70 p-3">
                 {messages.map((msg, i) => (
                   <ChatBubble key={i} role={msg.role} text={msg.text} />
                 ))}
@@ -291,7 +289,7 @@ export default function HomePage() {
                 <div ref={chatBottomRef} />
               </div>
 
-              <form onSubmit={handleSendChat} className="mt-3 flex items-center gap-2 rounded-xl border border-slate-700/70 bg-slate-900/70 p-2">
+              <form onSubmit={handleSendChat} className="mt-3 flex items-center gap-2 rounded-xl border border-slate-700/70 bg-slate-900/80 p-2">
                 <Input
                   type="text"
                   placeholder="Tulis pertanyaan kamu..."
@@ -299,7 +297,7 @@ export default function HomePage() {
                   onChange={(e) => setChatInput(e.target.value)}
                   disabled={chatLoading}
                 />
-                <Button type="submit" disabled={chatLoading}>
+                <Button type="submit" className="bg-gradient-to-r from-indigo-500 to-violet-500" disabled={chatLoading}>
                   Send
                 </Button>
               </form>
@@ -308,6 +306,32 @@ export default function HomePage() {
         </section>
       </div>
     </main>
+  );
+}
+
+function Hero() {
+  return (
+    <Card className="border-white/15 bg-gradient-to-br from-white/10 via-indigo-500/10 to-violet-500/10 backdrop-blur-xl">
+      <CardHeader>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.18em] text-indigo-300">AI Career Studio</p>
+            <CardTitle className="mt-2 text-2xl sm:text-3xl">
+              Resume ATS Scanner <span className="text-indigo-300">+ Gemini Career Chat</span>
+            </CardTitle>
+            <CardDescription className="mt-2 max-w-2xl text-sm sm:text-base">
+              Upload CV, cek ATS score, lalu ngobrol dengan AI buat dapetin perbaikan yang actionable.
+            </CardDescription>
+          </div>
+
+          <div className="flex flex-wrap gap-2 text-xs">
+            <Badge variant="outline">⚡ Fast</Badge>
+            <Badge variant="outline">📱 Mobile Friendly</Badge>
+            <Badge variant="outline">🤖 Gemini</Badge>
+          </div>
+        </div>
+      </CardHeader>
+    </Card>
   );
 }
 
@@ -324,12 +348,11 @@ function BackgroundGlow() {
 function ChatBubble({ role, text }) {
   const isUser = role === "user";
   return (
-    <div
-      className={`mb-2 max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-md transition-all duration-200 ${
-        isUser ? "ml-auto bg-indigo-500/85 text-white" : "mr-auto bg-slate-700/70 text-slate-100"
-      }`}
-    >
-      {text}
+    <div className={`mb-2 flex ${isUser ? "justify-end" : "justify-start"}`}>
+      <div className={`max-w-[88%] rounded-2xl px-3 py-2 text-sm leading-relaxed shadow-md ${isUser ? "bg-indigo-500/90 text-white" : "bg-slate-700/75 text-slate-100"}`}>
+        <p className="mb-1 text-[10px] uppercase tracking-wide opacity-75">{isUser ? "You" : "Gemini"}</p>
+        <p className="whitespace-pre-wrap break-words">{text}</p>
+      </div>
     </div>
   );
 }
@@ -348,9 +371,9 @@ function List({ title, items = [] }) {
   );
 }
 
-function InfoPill({ label, value }) {
+function InfoPill({ label, value, tone = "from-white/10 to-transparent" }) {
   return (
-    <div className="rounded-lg border border-white/10 bg-white/5 px-2 py-2">
+    <div className={`rounded-lg border border-white/10 bg-gradient-to-b ${tone} px-2 py-2`}>
       <p className="text-[10px] uppercase tracking-wide text-slate-400">{label}</p>
       <p className="mt-1 text-sm font-semibold text-slate-100">{value}</p>
     </div>
